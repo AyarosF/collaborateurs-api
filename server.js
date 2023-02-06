@@ -6,7 +6,50 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import mongoose from 'mongoose'
-import session from 'express-session'
-import MongoStore from 'connect-mongo'
 
 import route from './routes/routes.js'
+
+// ==========
+// Database initialization
+// ==========
+
+mongoose
+  .set('strictQuery', true)
+  .connect('mongodb://127.0.0.1:27017/collaborators', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(init)
+
+// ==========
+// App initialization
+// ==========
+
+async function init() {
+  dotenv.config()
+  const { APP_HOSTNAME, APP_PORT, NODE_ENV } = process.env
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+  const app = express();
+  // ==========
+  // App middlewares
+  // ==========
+
+  app.use(express.urlencoded({ extended: false }))
+  app.use(express.json())
+
+  // ==========
+  // App routers
+  // ==========
+
+  app.use('/', route)
+
+  // ==========
+  // App start
+  // ==========
+
+  app.listen(APP_PORT, () => {
+    console.log(`App listening at http://${APP_HOSTNAME}:${APP_PORT}`)
+  })
+  
+}
