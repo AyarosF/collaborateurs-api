@@ -1,5 +1,4 @@
 GET http://localhost:8000/
-
 ###
 POST http://localhost:8000/login HTTP/1.1
 content-type: application/json
@@ -7,4 +6,64 @@ content-type: application/json
 {
     "email": "owen.lopez@example.com",
     "password": "owen.lopez"
+}
+###
+GET http://localhost:8000/logout
+###
+GET http://localhost:8000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRW1haWwiOiJvd2VuLmxvcGV6QGV4YW1wbGUuY29tIiwiaWF0IjoxNjc1Nzg2NjE5LCJleHAiOjE2NzU4NzMwMTl9.ohu_sgT2xvNiDb2AwwNJuNzmK93dNfZ4W33RLJ2LXj8
+###
+GET http://localhost:8000/users/random
+###
+DELETE http://localhost:8000/users/63e23d04d0f18221475312fb/delete
+###
+PUT http://localhost:8000/users/63e113b5ba4f4bae57a82502/edit HTTP/1.1
+content-type: application/json
+
+{
+    "gender":"female", 
+    "category": "Sciences",
+    "lastname":"grrdedergr",
+    "firstname":"Gdwffdddddddw",
+    "email":"blablaa@ablabla.com",
+    "password":"effedsdssfsdd", 
+    "phone":"06-17-72-03-26", 
+    "birthdate":"07/06/1995", 
+    "city":"Toulon",
+    "country":"France", 
+    "photo":"https://randomuser.me/api/portraits/women/21.jpg" 
+}
+###
+PUT http://localhost:8000/users/63e113b5ba4f4bae57a82502/editbis HTTP/1.1
+content-type: application/json
+
+{
+    "gender":"female", 
+    "category": "Sciences",
+    "lastname":"grrdedergr",
+    "firstname":"B",
+    "email":"blabla@blabla.com",
+    "password":"dvffffdffv", 
+    "phone":"06-17-72-03-26", 
+    "birthdate":"07/06/1995", 
+    "city":"Toulon",
+    "country":"France", 
+    "photo":"https://randomuser.me/api/portraits/women/21.jpg" 
+}
+###
+POST http://localhost:8000/users/add HTTP/1.1
+content-type: application/json
+
+{
+  "gender":"Homme",
+  "category":"Marketing",
+  "firstname":"B",
+  "lastname":"Be",
+  "email":"tyyy@test.com",
+  "password":"fhueghfuie",
+  "phone":"01-02-03-04-05",
+  "birthdate":"1991-06-21",
+  "city":"Paris",
+  "country":"France",
+  "photo":""
 }

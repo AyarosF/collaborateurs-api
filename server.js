@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 import mongoose from 'mongoose'
 
 import route from './routes/routes.js'
+import logger from './middlewares/logger.js' 
 
 // ==========
 // Database initialization
@@ -37,6 +38,7 @@ async function init() {
 
   app.use(express.urlencoded({ extended: false }))
   app.use(express.json())
+  app.use(logger)
 
   // ==========
   // App routers
