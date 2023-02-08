@@ -6,6 +6,7 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import mongoose from 'mongoose'
+import cors from 'cors'
 
 import route from './routes/routes.js'
 import logger from './middlewares/logger.js' 
@@ -43,8 +44,9 @@ async function init() {
   // ==========
   // App routers
   // ==========
-
+  app.options('*', cors({origin : "http://localhost:3000"}))
   app.use('/', route)
+
 
   // ==========
   // App start

@@ -13,6 +13,7 @@
 
 import express from 'express'
 import auth from '../middlewares/auth.js'
+import cors from 'cors'
 const router = express.Router()
 
 import UserController from '../controllers/UserController.js'
@@ -22,7 +23,7 @@ router.get('/users', auth, UserController.getAllUsers)
 //router.get('/users/:filter', UserController.getFilteredUsers)
 
 // User CRUD
-router.post('/login', UserController.login) // Action de connexion (post)
+router.post('/login', cors(), UserController.login) // Action de connexion (post)
 
 router.get('/users/random', UserController.getRandomUser) // Récupère les infos d'un utilisateur random
 router.get('/users/:id', UserController.getUserById) // Récupère les infos d'un utilisateur précis
