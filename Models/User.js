@@ -9,14 +9,14 @@ const UserSchema = new Schema({
     required: [true, "User firstname required"], 
     minLength: [2, "Must be at least 2 characters, got {VALUE}"],  
     maxLength: [100, "Must be at most 100 characters, got {VALUE}"], 
-    match: [/^[a-zA-Z]+$/, "Please fill a valid firstname"]
+    match: [/^[A-zÀ-ú-]*$/, "Please fill a valid firstname"]
   },
   lastname: { 
     type: String, 
     required: [true, "User lastname required"], 
     minLength: [2, "Must be at least 2 characters, got {VALUE}"], 
     maxLength: [100, "Must be at most 100 characters, got {VALUE}"], 
-    match: [/^[a-zA-Z]+$/, "Please fill a valid lastname"]
+    match: [/^[A-zÀ-ú-\s]*$/, "Please fill a valid lastname"]
   },
   email: { 
     type: String, 
@@ -43,14 +43,14 @@ const UserSchema = new Schema({
     required: true, 
     minLength: [2, "Must be at least 2 characters, got {VALUE}"],  
     maxLength: [100, "Must be at most 100 characters, got {VALUE}"], 
-    match: [/^[a-zA-Z]+$/, "Please fill a valid city"]
+    match: [/^[A-zÀ-ú-\s]*$/, "Please fill a valid city"]
   },
   country: { 
     type: String, 
     required: true,
     minLength: [2, "Must be at least 2 characters, got {VALUE}"],  
     maxLength: [100, "Must be at most 100 characters, got {VALUE}"], 
-    match: [/^[a-zA-Z]+$/, "Please fill a valid counntry"]
+    match: [/^[A-zÀ-ú-\s]*$/, "Please fill a valid counntry"]
   },
   photo: { 
     type: String, 

@@ -62,54 +62,54 @@ const login = async (req, res) => {
     })
 }
 
-const logout = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: {}
-  })
-}
-
 // ==================
 // CRUD
 // ==================
 
 const addUser = (req, res) => {
-
-  const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
+  if (req.user.isAdmin) {
+    const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
   
-  const User = new UserModel({
-    gender: gender,
-    category: category,
-    firstname: firstname,
-    lastname: lastname,
-    email: email,
-    password: password,
-    phone: phone,
-    birthdate: birthdate,
-    city: city,
-    country: country,
-    photo: photo
-  })
-
-  User.save()
-    .then((user) => {
-      res.status(200).send({ message: "Collaborateur ajouté !", user: getInfosUser(user) })
-    }).catch((err) => {
-      res.status(500).send({ message: "Une erreur est survenue", error: err.message })
+    const User = new UserModel({
+      gender: gender,
+      category: category,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password,
+      phone: phone,
+      birthdate: birthdate,
+      city: city,
+      country: country,
+      photo: photo
     })
 
+    User.save()
+      .then((user) => {
+        res.status(200).send({ message: "Collaborateur ajouté !", user: getInfosUser(user) })
+      }).catch((err) => {
+        res.status(500).send({ message: "Une erreur est survenue", error: err.message })
+      })
+  }
+  res.status(401).send({ message: "Unauthorized" })
+  
 }
 
 const updateUser = async (req, res) => {
-  const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
-  const filter = { _id: req.params.id }
+  if (req.user.id == req.params.id || req.user.isAdmin) {
+    const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
+    const filter = { _id: req.params.id }
+    
+    UserModel.findOneAndUpdate(filter, req.body, { new : true, runValidators:true })
+      .then((user) => {
+        res.status(200).json({ status: "success", data : user })
+      }).catch((err) => {
+        res.status(500).json({ status: "error", message: err.message })
+      })
+  } else {
+    res.status(401).send({ message: "Unauthorized" })
+  }
   
-  UserModel.findOneAndUpdate(filter, req.body, { new : true, runValidators:true })
-    .then((user) => {
-      res.status(200).json({ status: "success", data : user })
-    }).catch((err) => {
-      res.status(500).json({ status: "error", message: err.message })
-    })
 }
 
 const deleteUser = async (req, res) => {
@@ -125,6 +125,7 @@ const deleteUser = async (req, res) => {
 }
 
 const getAllUsers = async (req, res) => {
+  console.log(req.user)
   try {
     // const users = await UserModel.find({}, { password:0 })
     const users = await UserModel.find({})
@@ -161,7 +162,6 @@ const getUserById = (req, res) => {
 
 export default {
   login,
-  logout,
   addUser,
   updateUser,
   deleteUser,
