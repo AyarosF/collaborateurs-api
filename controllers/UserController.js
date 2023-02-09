@@ -10,6 +10,7 @@ const getInfosUser = (user) => {
     const age = Dates.getAge(user.birthdate)
     const formattedUser = {
       id : user.id, 
+      gender: user.gender,
       firstname: user.firstname,
       lastname: user.lastname,
       category: user.category,
@@ -17,16 +18,18 @@ const getInfosUser = (user) => {
       country: user.country,
       email: user.email,
       phone: user.phone,
-      birthdate: birthdateString,
+      birthdate: user.birthdate,
+      birthday: birthdateString,
       age: age,
-      photo: user.photo
+      photo: user.photo,
+      isAdmin: user.isAdmin
     }
 
     return formattedUser
 }
 
 // ==================
-// Login / Logout
+// Login
 // ==================
 
 const login = async (req, res) => {
@@ -48,7 +51,7 @@ const login = async (req, res) => {
             const accessToken = jwt.sign({ userEmail: user.email }, TOKEN, {
           expiresIn: '24h',
         })
-        res.status(200).json({ message: 'Connexion validée', token: accessToken })
+        res.status(200).json({ message: 'Connexion validée', token: accessToken, userId: user._id })
           } else {
             return res.status(401).json({ message: 'Mot de passe invalide' })
           }
@@ -91,7 +94,9 @@ const addUser = (req, res) => {
         res.status(500).send({ message: "Une erreur est survenue", error: err.message })
       })
   }
-  res.status(401).send({ message: "Unauthorized" })
+  else {
+    res.status(401).send({ message: "Unauthorized" })
+  }
   
 }
 
@@ -127,10 +132,8 @@ const deleteUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   console.log(req.user)
   try {
-    // const users = await UserModel.find({}, { password:0 })
-    const users = await UserModel.find({})
-   // res.status(200).json({ status: "success", data: users.map(user => getInfosUser(user)) })
-    res.status(200).json({ status: "success", data: users })
+    const users = await UserModel.find({}, { password:0 })
+    res.status(200).json({ status: "success", data: users.map(user => getInfosUser(user)) })
   }
   catch(err){
     res.status(500).json({ status: "error", message: err.message })
@@ -154,7 +157,7 @@ const getUserById = (req, res) => {
   const { id } = req.params
   UserModel.findOne({ _id: id })
     .then((user) => {
-      res.status(200).send({ user: user })
+      res.status(200).send({ user: getInfosUser(user) })
     }).catch((err) => {
       res.status(500).json({ status: "error", message: err.message })
     })

@@ -44,7 +44,8 @@ async function init() {
   // ==========
   // App routers
   // ==========
-  app.options('*', cors({origin : "http://localhost:3000"}))
+  app.options('*', cors())
+  app.use(cors())
   app.use('/', route)
 
 

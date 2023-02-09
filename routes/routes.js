@@ -23,15 +23,15 @@ router.get('/users', auth, UserController.getAllUsers)
 //router.get('/users/:filter', UserController.getFilteredUsers)
 
 // User CRUD
-router.post('/login', cors(), UserController.login) // Action de connexion (post)
+router.post('/login', UserController.login) // Action de connexion (post)
 
-router.get('/users/random', UserController.getRandomUser) // Récupère les infos d'un utilisateur random
-router.get('/users/:id', UserController.getUserById) // Récupère les infos d'un utilisateur précis
+router.get('/users/random', auth, UserController.getRandomUser) // Récupère les infos d'un utilisateur random
+router.get('/users/:id', auth, UserController.getUserById) // Récupère les infos d'un utilisateur précis
 router.put('/users/:id/edit', auth, UserController.updateUser) // Modification du profil (post)
 
 // Admin
 router.post('/users/add', auth, UserController.addUser) // Ajout d'utilisateur (post)
-router.delete('/users/:id/delete', UserController.deleteUser) // Suppression d'utilisateur
+router.delete('/users/:id/delete', auth, UserController.deleteUser) // Suppression d'utilisateur
 
 
 export default router
