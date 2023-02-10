@@ -26,7 +26,8 @@ const UserSchema = new Schema({
   },
   password: { 
     type: String, 
-    required: true 
+    set: p => p === '' ? undefined : p
+    //required: true 
     //TODO contraintes sur la difficulte du mdp 
   },
   phone: { 
@@ -36,7 +37,9 @@ const UserSchema = new Schema({
   },
   birthdate: { 
     type: Date, 
-    required: true
+    required: true,
+    min: '1950-01-01',
+    max: '2005-02-01'
   },
   city: { 
     type: String, 
@@ -68,7 +71,7 @@ const UserSchema = new Schema({
     type: Boolean, 
     default: false
   },
-})
+}, { minimize: true })
 
 // Password & Crypt (bcrypt)
 UserSchema.pre('save', async function (next) {

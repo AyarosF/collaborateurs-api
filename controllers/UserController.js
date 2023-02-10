@@ -72,27 +72,32 @@ const login = async (req, res) => {
 const addUser = (req, res) => {
   if (req.user.isAdmin) {
     const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
-  
-    const User = new UserModel({
-      gender: gender,
-      category: category,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      password: password,
-      phone: phone,
-      birthdate: birthdate,
-      city: city,
-      country: country,
-      photo: photo
-    })
 
-    User.save()
-      .then((user) => {
-        res.status(200).send({ message: "Collaborateur ajouté !", user: getInfosUser(user) })
-      }).catch((err) => {
-        res.status(500).send({ message: "Une erreur est survenue", error: err.message })
+    if (password && password !== "") {
+        const User = new UserModel({
+        gender: gender,
+        category: category,
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        password: password,
+        phone: phone,
+        birthdate: birthdate,
+        city: city,
+        country: country,
+        photo: photo
       })
+
+      User.save()
+        .then((user) => {
+          res.status(200).send({ message: "Collaborateur ajouté !", user: getInfosUser(user) })
+        }).catch((err) => {
+          res.status(500).send({ message: "Une erreur est survenue", error: err.message })
+        })
+    } else {
+      res.status(401).send({ message: "Unauthorized : mot de passe obligatoire" })
+    }
+
   }
   else {
     res.status(401).send({ message: "Unauthorized" })
@@ -102,7 +107,7 @@ const addUser = (req, res) => {
 
 const updateUser = async (req, res) => {
   if (req.user.id == req.params.id || req.user.isAdmin) {
-    const { gender, category, lastname, firstname, email, password, phone, birthdate, city, country, photo } = req.body
+    const { gender, category, lastname, firstname, email, password, confirm_password, phone, birthdate, city, country, photo } = req.body
     const filter = { _id: req.params.id }
     
     UserModel.findOneAndUpdate(filter, req.body, { new : true, runValidators:true })
@@ -118,15 +123,17 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-  const { id } = req.params 
-  try 
-  {
-    await UserModel.findByIdAndRemove(id)
-    res.status(200).json({ status: "success" })
-  }
-  catch(err) {
-    res.status(500).json({ status: "error", message: err.message })
-  }
+  if (req.user.isAdmin) {
+    const { id } = req.params 
+    try 
+    {
+      await UserModel.findByIdAndRemove(id)
+      res.status(200).json({ status: "success" })
+    }
+    catch(err) {
+      res.status(500).json({ status: "error", message: err.message })
+    }
+}
 }
 
 const getAllUsers = async (req, res) => {
